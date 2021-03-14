@@ -1,0 +1,14 @@
+[Unit]
+Description=Sensor notifications
+After=network.target
+
+[Service]
+ExecStart=/home/joni/arduino-gpu-monitor/venv/bin/python3 /home/joni/arduino-gpu-monitor/src/arduino_gpu_monitor/main.py
+WorkingDirectory=/home/joni/arduino-gpu-monitor
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=joni
+
+[Install]
+WantedBy=multi-user.target
