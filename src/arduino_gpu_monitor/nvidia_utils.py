@@ -33,8 +33,8 @@ def read_gpu_log():
     return out_dict
 
 def gpu_status(gpu_id=0):
-    total_megs, used_megs = 100,0
-    gpu_use_p, gpu_mem_p = 0,0
+    total_megs, used_megs = -1,-1
+    gpu_use_p, gpu_mem_p = -1,-1
     try:
         pynvml.nvmlInit()
         handle = pynvml.nvmlDeviceGetHandleByIndex(gpu_id)
@@ -56,7 +56,7 @@ def gpu_status(gpu_id=0):
 def compact_gpu_stats():
     gpu_log = read_gpu_log()
     used_megs, total_megs, gpu_use_p, gpu_mem_p = gpu_status()
-    current_temperature, max_temperature = 0,0
+    current_temperature, max_temperature = -1,-1
 
     if 'GPU Current Temp' in gpu_log and 'GPU Max Operating Temp' in gpu_log:
         current_temp_str = gpu_log['GPU Current Temp']
@@ -72,12 +72,20 @@ def compact_gpu_stats():
 
     gpu_dict = {
         'name':product_name,
-        'gpu_util_p': gpu_use_p,
-        'mem_util_p': gpu_mem_p,
         'curr_temp': current_temperature,
-        'max_temp': max_temperature,
-        'used_mem': used_megs,
-        'total_mem': total_megs
+        'max_temp': max_temperature
     }
+
+    if gpu_use_p > 0:
+        gpu_dict['gpu_util_p'] = gpu_use_p
+    if used_megs > 0 and total_megs > 0:
+        # get mem_p from values
+        gpu_mem_p = int(100 * (float(used_megs) / float(total_megs)))
+    if gpu_mem_p > 0:
+        gpu_dict['mem_util_p'] = gpu_mem_p
+    if used_megs > 0:       
+        gpu_dict['used_mem'] = used_megs
+    if total_megs > 0:
+        gpu_dict['total_mem'] = total_megs
 
     return gpu_dict
