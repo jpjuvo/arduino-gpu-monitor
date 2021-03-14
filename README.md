@@ -62,5 +62,7 @@ sudo cp ./gpumonitor.service /etc/systemd/system/gpumonitor.service
 
 Start service and enable it on boot.
 
+```
 sudo systemctl start gpumonitor.service
 sudo systemctl enable gpumonitor.service
+```
