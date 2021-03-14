@@ -23,19 +23,31 @@ MCUFRIEND_kbv tft;
 #define RED2GREEN 5
 
 // GPU variables
-int gpu_util_p = 50;
-int mem_util_p = 50;
+int gpu_util_p = 100;
+int mem_util_p = 100;
 String gpu_name = "";
-int current_temp = 0;
+int current_temp = 999;
 int max_temp = 100;
 int used_mem = 0;
 int total_mem = 100;
 
 
 // Coordinates
-int center_x = 170;
-int titles_x_coord = 180;
-int values_x_coord = 185;
+int center_x = 150;
+int titles_x_coord = 160;
+int values_x_coord = 165;
+
+int row_height = 80;
+int title_y_offset = 8;
+int text_field_y_offset = 35;
+int text_field_height = 33;
+int row_1_y = 0;
+int row_2_y = row_1_y + row_height;
+int row_3_y = row_2_y + row_height;
+int row_4_y = row_3_y + row_height;
+int row_5_y = row_4_y + row_height;
+
+
 
 String str; 
 String key;
@@ -57,49 +69,56 @@ void setup() {
   tft.setTextSize (2);
   tft.setTextColor (WHITE,BLACK);
   
-  tft.setCursor (titles_x_coord, 5);
+  tft.setCursor (titles_x_coord, row_1_y + title_y_offset);
   tft.print ("GPU");
 
-  tft.setCursor (titles_x_coord, 57);
+  tft.setCursor (titles_x_coord, row_2_y + title_y_offset);
   tft.print ("Temperature C");
 
   
-  tft.setCursor (titles_x_coord, 107);
+  tft.setCursor (titles_x_coord, row_3_y + title_y_offset);
   tft.print ("Used memory MB");
 
-  tft.setCursor (titles_x_coord, 157);
+  tft.setCursor (titles_x_coord, row_4_y + title_y_offset);
   tft.print ("Total memory MB");
   
   //Design Interface (lines) x,y,w,h
   // Left horizontal
-  tft.fillRect(0, 160, center_x, 4, BLUE);
+  tft.fillRect(0, 160, center_x, 4, CYAN);
   // center vertical
-  tft.fillRect(center_x, 0, 4, 360, BLUE);
-  // Right horizontal lines - 50 spacing (- 4 for lines)
-  tft.fillRect(center_x, 50, 320, 4, BLUE);
-  tft.fillRect(center_x, 98, 320, 4, BLUE);
-  tft.fillRect(center_x, 148, 320, 4, BLUE);
-  tft.fillRect(center_x, 198, 320, 4, BLUE);
+  tft.fillRect(center_x, 0, 4, 360, CYAN);
+  // Right horizontal lines
+  tft.fillRect(center_x, row_2_y, 320, 4, CYAN);
+  tft.fillRect(center_x, row_3_y, 320, 4, CYAN);
+  tft.fillRect(center_x, row_4_y, 320, 4, CYAN);
+  //tft.fillRect(center_x, row_5_y, 320, 4, CYAN);
 
   update();
   update_display_values();
 }
 
 void update_display_values(){
-  tft.setTextSize (2);
-  tft.setTextColor ( RED , BLACK);
+  tft.setTextSize (3);
+  tft.setTextColor ( GREEN , BLACK);
   
   // Name
-  tft.setCursor(values_x_coord, 28);
+  tft.fillRect(values_x_coord, row_1_y + text_field_y_offset, 300, text_field_height, BLACK);
+  tft.setCursor(values_x_coord, row_1_y + text_field_y_offset);
   tft.print(gpu_name);
-  
-  tft.setCursor(values_x_coord, 78);
+
+  tft.setTextSize (3);
+  tft.setTextColor ( RED , BLACK);
+
+  tft.fillRect(values_x_coord, row_2_y + text_field_y_offset, 300, text_field_height, BLACK);
+  tft.setCursor(values_x_coord, row_2_y + text_field_y_offset);
   tft.print(current_temp);
 
-  tft.setCursor(values_x_coord, 128);
+  tft.fillRect(values_x_coord, row_3_y + text_field_y_offset, 300, text_field_height, BLACK);
+  tft.setCursor(values_x_coord, row_3_y + text_field_y_offset);
   tft.print(used_mem);
 
-  tft.setCursor(values_x_coord, 178);
+  tft.fillRect(values_x_coord, row_4_y + text_field_y_offset, 300, text_field_height, BLACK);
+  tft.setCursor(values_x_coord, row_4_y + text_field_y_offset);
   tft.print(total_mem);
 }
 
@@ -163,21 +182,19 @@ String getValue(String data, char separator, int index)
 void loop() {
   int xpos = 0, ypos = 5, gap = 4, radius = 40;
   // Draw a large meter
-  xpos = 5, ypos = 5, gap = 65, radius = 65;
+  xpos = 10, ypos = 5, gap = 65, radius = 65;
   ringMeter(gpu_util_p, 1, 99, xpos, ypos, radius, "GPU %", GREEN2RED); 
 
   // Draw a large meter
-  xpos = 5, ypos = 170, gap = 65, radius = 65;
+  xpos = 10, ypos = 170, gap = 65, radius = 65;
   ringMeter(mem_util_p, 1, 99, xpos, ypos, radius, "Mem %", GREEN2RED);
 
-  delay(10000);
+  delay(5000);
 
   update();
   update_display_values();
 }
 
-// This function is modified from here:
-// https://github.com/Bodmer/TFT_HX8357_Due/blob/master/examples/Meter_ring_HX8357_1/Meter_ring_HX8357_1.ino
 int ringMeter(int value, int vmin, int vmax, int x, int y, int r, char *units, byte scheme)
 {
   
@@ -232,9 +249,9 @@ int ringMeter(int value, int vmin, int vmax, int x, int y, int r, char *units, b
     //buf[len] = 1; 
   //buf[len] = 2; // Add blanking space and terminator, helps to centre text too!
   // Set the text colour to default
-  tft.fillRect(x - 25, y - 25, 50, 50, BLACK);
+  tft.fillRect(x - 30, y - 22, 60, 50, BLACK);
   tft.setTextColor(GREEN, BLACK);
-  tft.setCursor(x - 20, y - 20); tft.setTextSize(4);
+  tft.setCursor(x - 25, y - 17); tft.setTextSize(3);
   tft.print(buf);
   tft.setTextColor(GREEN, BLACK);
   tft.setCursor(x - 35, y + 65); tft.setTextSize(2);
