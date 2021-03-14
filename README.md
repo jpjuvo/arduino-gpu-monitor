@@ -1,14 +1,23 @@
 # Arduino GPU monitor
 
-Monitor GPU usage stats from an ArduinoTFT display.
+Monitor computer GPU status from an USB connected Arduino (with TFT display). I built this for monitoring my GPU temperature and utilization percentage when training AI models.
 
-A USB connected Arduino requests GPU stats updates from a service script. The service script waits for a connection and send updates to Arduino when requested. See the logic below.
+<img src="./media/arduino_display.jpg" alt="display" width="400"/>
 
-![flowchart](./media/service-script-flowchart.png)
+### Operation
+
+A USB connected Arduino requests GPU status updates from a python service script. 
+
+The service script waits for a USB connection and sends updates to Arduino when requested. See the logic below.
+
+<img src="./media/service-script-flowchart.png" alt="display" width="400"/>
 
 ## Requirements
 
-The service scripts are only working in Linux (tested with Ubuntu 20.04) and with Nvidia GPU and drivers.
+- The python service script works only in Linux (tested with Ubuntu 20.04).
+- Nvidia GPU and CUDA driver
+- Arduino Uno and TFT display (480x320)
+- Python 3.6+
 
 ------------------------------------------------
 
@@ -18,20 +27,21 @@ The service scripts are only working in Linux (tested with Ubuntu 20.04) and wit
 
 Arduino code is in `src/arduino/tft-client`
 
-Upload to Arduino Uno with 480x360 tft-display with [Arduino IDE](https://www.arduino.cc/en/software/). Install all required libraries for TFT such as Adafruit GFX and MCUFRIEND KBV. See more info [here](https://create.arduino.cc/projecthub/electropeak/ultimate-beginner-s-guide-to-run-tft-lcd-displays-by-arduino-081006).
-
+Upload to Arduino Uno with [Arduino IDE](https://www.arduino.cc/en/software/). Install all required libraries for TFT such as Adafruit GFX and MCUFRIEND KBV. See more info [here](https://create.arduino.cc/projecthub/electropeak/ultimate-beginner-s-guide-to-run-tft-lcd-displays-by-arduino-081006).
 
 ### Serial port access rules
 
 Serial comms are restricted by default and need `sudo` priviledges unless the port is given read/write permission for all users.
 
-**For single time permission** (resets after restart). `/dev/ttyACM0` is the Arduino's port (check this).
+**For single time permission** (resets after restart). 
+
+`/dev/ttyACM0` is the Arduino's port (check this).
 
 ```bash
 sudo chmod 666 /dev/ttyACM0  
 ```
 
-**For persisting rule**, create a new rule file
+**For persisting permission**, create a new rule file
 
 `sudo nano /etc/udev/rules.d/arduino-monitor.rules`
 
@@ -43,7 +53,7 @@ This sets the world read and write permission to USB device. Active after comput
 
 ### Script as a service
 
-Install Pyhon env and required packages. cd into project root and: 
+Install Pyhon virtual env and required packages. cd into project root and: 
 
 ```bash
 python3 -m venv venv
