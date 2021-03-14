@@ -2,17 +2,23 @@
 
 Monitor GPU usage stats from an ArduinoTFT display.
 
-The Arduino requests GPU stats updates from a service script with USB serial comms. The service script seeks for Arduino's port in available serial ports and connects to it once detected. Service script sends GPU stats to Arduino when requested. If Arduino is unplugged, the service script goes into seeking connection loop until Arduino is reconnected.
+A USB connected Arduino requests GPU stats updates from a service script. The service script waits for a connection and send updates to Arduino when requested. See the logic below.
+
+![flowchart](./media/service-script-flowchart.png)
+
+## Requirements
 
 The service scripts are only working in Linux (tested with Ubuntu 20.04) and with Nvidia GPU and drivers.
+
+------------------------------------------------
 
 ## Installation
 
 ### Arduino
 
-Arduino code is in src/arduino/tft-client.
+Arduino code is in `src/arduino/tft-client`
 
-Upload to Arduino Uno with 480x360 tft-display with Arduino IDE. Install all required libraries for TFT such as Adafruit GFX and MCUFRIEND KBV. See more info [here](https://create.arduino.cc/projecthub/electropeak/ultimate-beginner-s-guide-to-run-tft-lcd-displays-by-arduino-081006).
+Upload to Arduino Uno with 480x360 tft-display with [Arduino IDE](https://www.arduino.cc/en/software/). Install all required libraries for TFT such as Adafruit GFX and MCUFRIEND KBV. See more info [here](https://create.arduino.cc/projecthub/electropeak/ultimate-beginner-s-guide-to-run-tft-lcd-displays-by-arduino-081006).
 
 
 ### Serial port access rules

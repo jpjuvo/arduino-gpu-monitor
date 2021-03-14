@@ -176,6 +176,8 @@ void loop() {
   update_display_values();
 }
 
+// This function is modified from here:
+// https://github.com/Bodmer/TFT_HX8357_Due/blob/master/examples/Meter_ring_HX8357_1/Meter_ring_HX8357_1.ino
 int ringMeter(int value, int vmin, int vmax, int x, int y, int r, char *units, byte scheme)
 {
   
