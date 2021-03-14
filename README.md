@@ -1,12 +1,12 @@
 # Arduino GPU monitor
 
-Monitor computer GPU status from an USB connected Arduino (with TFT display). I built this for monitoring my GPU temperature and utilization percentage when training AI models.
+Monitor computer's GPU status from a USB-connected Arduino (with TFT display). I built this for monitoring my GPU temperature and utilization percentage when training AI models.
 
 <img src="./media/arduino_display.jpg" alt="display" width="400"/>
 
 ### Operation
 
-A USB connected Arduino requests GPU status updates from a python service script. 
+A USB-connected Arduino requests GPU status updates from a python service script. 
 
 The service script waits for a USB connection and sends updates to Arduino when requested. See the logic below.
 
@@ -31,7 +31,7 @@ Upload to Arduino Uno with [Arduino IDE](https://www.arduino.cc/en/software/). I
 
 ### Serial port access rules
 
-Serial comms are restricted by default and need `sudo` priviledges unless the port is given read/write permission for all users.
+Serial communications are restricted by default and need `sudo` privileges. We can set read/write permission for all users to bypass this.
 
 **For single time permission** (resets after restart). 
 
@@ -77,4 +77,4 @@ sudo systemctl start gpumonitor.service
 sudo systemctl enable gpumonitor.service
 ```
 
-Now, the script starts automatically on boot.
+The script starts automatically on boot.
