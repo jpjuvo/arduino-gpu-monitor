@@ -54,7 +54,7 @@ pip3 install -r requirements.txt
 
 If your Arduino port name is different from `/dev/ttyACM0`, change it from the `src/arduino_gpu_monitor/config.py`
 
-Check script paths in gpumonitor.service and copy to /etc/systemd/system/gpumonitor.service
+Change `ExecStart` and `User` in **gpumonitor.service** to match your paths and username, and copy to `/etc/systemd/system/gpumonitor.service`
 
 ```
 sudo cp ./gpumonitor.service /etc/systemd/system/gpumonitor.service
@@ -66,3 +66,5 @@ Start service and enable it on boot.
 sudo systemctl start gpumonitor.service
 sudo systemctl enable gpumonitor.service
 ```
+
+Now, the script starts automatically on boot.
