@@ -23,15 +23,15 @@ Upload to Arduino Uno with 480x360 tft-display with [Arduino IDE](https://www.ar
 
 ### Serial port access rules
 
-Using serial comms is by default restricted and needs sudo unless the port is given read/write permission for all users.
+Serial comms are restricted by default and need `sudo` priviledges unless the port is given read/write permission for all users.
 
-For single time permission (resets after restart). `/dev/ttyACM0` is the Arduino's port (check this).
+**For single time permission** (resets after restart). `/dev/ttyACM0` is the Arduino's port (check this).
 
 ```bash
 sudo chmod 666 /dev/ttyACM0  
 ```
 
-For persisting rule, create a new rule file
+**For persisting rule**, create a new rule file
 
 `sudo nano /etc/udev/rules.d/arduino-monitor.rules`
 
@@ -52,7 +52,7 @@ pip3 install --upgrade pip
 pip3 install -r requirements.txt
 ```
 
-If your Arduino port name is different from `/dev/ttyACM0`, change it in the /src/arduino_gpu_monitor/config.py
+If your Arduino port name is different from `/dev/ttyACM0`, change it from the `src/arduino_gpu_monitor/config.py`
 
 Check script paths in gpumonitor.service and copy to /etc/systemd/system/gpumonitor.service
 
